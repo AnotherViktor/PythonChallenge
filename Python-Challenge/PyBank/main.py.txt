@@ -1,0 +1,48 @@
+import os
+import csv
+
+file_path = os.path.join('C:\\Users\\vikto\\Desktop\\UofM-VIRT-DATA-PT-06-2024-U-LOLC\\02_Challenges\\03_Python\\PyBank\\Resources', 'budget_data.csv')
+
+total_months = 0
+net_total = 0
+previous_profit_loss = 0
+total_change = 0
+average_change = 0
+greatest_increase = ["", 0]
+greatest_decrease = ["", 0]
+change_list = []
+
+with open(file_path, 'r', newline='') as csvfile:
+    csvreader = csv.reader(csvfile, delimiter=',')
+    header = next(csvreader)  # Skip header row
+       
+    for row in csvreader:
+        total_months += 1    
+        current_profit_loss = int(row[1])
+        net_total += current_profit_loss
+        
+        
+        if total_months > 1:
+            change = current_profit_loss - previous_profit_loss
+            total_change += change
+            change_list.append(change)
+            
+           
+            if change > greatest_increase[1]:
+                greatest_increase = [row[0], change]
+            if change < greatest_decrease[1]:
+                greatest_decrease = [row[0], change]
+            previous_profit_loss = current_profit_loss
+
+
+if total_months > 1:
+    average_change = total_change / (total_months - 1)
+
+
+print("Financial Analysis")
+print("------------------")
+print(f"Total Months: {total_months}")
+print(f"Total: ${net_total}")
+print(f"Average Change: ${average_change:.2f}")
+print(f"Greatest Increase in Profits: {greatest_increase[0]} (${greatest_increase[1]})")
+print(f"Greatest Decrease in Profits: {greatest_decrease[0]} (${greatest_decrease[1]})")
